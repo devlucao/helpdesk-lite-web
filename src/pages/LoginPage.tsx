@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import login from "../api/auth"
-import { getToken, setToken } from "../auth/tokenStorage";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../auth/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,11 +14,9 @@ export default function LoginPage() {
     event.preventDefault();
 
     const token = login(email, password);
-    setToken(token);
+    auth.login(token);
 
     navigate("/app", { replace: true });
-
-    console.log("STORED:", getToken());
   }
 
   return (

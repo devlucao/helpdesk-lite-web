@@ -1,18 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { clearToken } from "../auth/tokenStorage";
+// import { useNavigate } from "react-router-dom";
+// import useAuth from "../auth/useAuth";
 
 export default function AppHomePage() {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    clearToken();
-
-    navigate("/login", { replace: true });
-  }
+  // const navigate = useNavigate();
+  // const auth = useAuth();
 
   return (
     <>
-      <button type="button" onClick={handleLogout}>Sair</button>
+      <p>App Page</p>
     </>
   )
 }
