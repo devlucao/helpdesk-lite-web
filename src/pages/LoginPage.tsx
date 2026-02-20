@@ -10,13 +10,18 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const token = login(email, password);
-    auth.login(token);
+    try {
+      const token = await login(email, password);
+      auth.login(token);
 
-    navigate("/app", { replace: true });
+      navigate("/app", { replace: true });
+    } catch (err) {
+      console.error(err);
+      alert("Login inválido.")
+    }
   }
 
   return (

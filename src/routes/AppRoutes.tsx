@@ -3,6 +3,11 @@ import LoginPage from "../pages/LoginPage";
 import AppHomePage from "../pages/AppHomePage";
 import AuthGuard from "./AuthGuard";
 import AppLayout from "../layout/AppLayout";
+import AdminUsersPage from "../pages/AdminUsersPage";
+import RoleGuard from "./RoleGuard";
+import AgentQueuePage from "../pages/AgentQueuePage";
+import TicketCreatePage from "../pages/TicketCreatePage";
+import TicketsListPage from "../pages/TicketsListPage";
 
 export default function AppRoutes() {
   return (
@@ -16,8 +21,31 @@ export default function AppRoutes() {
           </AuthGuard>
         }>
           <Route index element={
-            <AppHomePage />
+            <Navigate to="tickets" replace />
           } />
+
+          <Route path="admin/users" element={
+            <RoleGuard allowedRoles={["admin"]}>
+              <AdminUsersPage />
+            </RoleGuard>
+          } />
+
+          <Route path="queue" element={
+            <RoleGuard allowedRoles={["admin", "agent"]}>
+              <AgentQueuePage />
+            </RoleGuard>
+          } />
+
+          <Route path="tickets/new" element={
+            <RoleGuard allowedRoles={["client"]}>
+              <TicketCreatePage />
+            </RoleGuard>
+          } />
+ 
+          <Route path="tickets" element={
+            <TicketsListPage />
+          } />
+
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
