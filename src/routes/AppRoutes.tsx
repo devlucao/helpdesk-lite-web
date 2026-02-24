@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
-import AppHomePage from "../pages/AppHomePage";
 import AuthGuard from "./AuthGuard";
 import AppLayout from "../layout/AppLayout";
 import AdminUsersPage from "../pages/AdminUsersPage";
