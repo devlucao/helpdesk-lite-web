@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import useAuth from "../auth/useAuth";
 import { apiGet } from "../api/apiClient";
+import { Link } from "react-router-dom";
+import { formatStatus } from "../utils/functions";
 
 export default function TicketsListPage() {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -60,14 +62,6 @@ export default function TicketsListPage() {
 
   const totalPages = meta?.totalPages ?? 1;
 
-  function formatStatus(status: string) {
-    if(status === "open") return "Aberto";
-    if(status === "in_progress") return "Em tratativa";
-    if(status === "closed") return "Encerrado.";
-
-    return status;
-  }
-
   return (
     <>
       <h2>TICKETS</h2>
@@ -102,8 +96,10 @@ export default function TicketsListPage() {
           <ul>
             {tickets.map((t: any) => (
               <li key={t.id}>
-                <strong>{t.title || "Sem título."}</strong> - 
-                <span> {formatStatus(t.status)}</span>
+                <Link to={`/app/tickets/${t.id}`}>
+                  <strong>{t.title || "Sem título."}</strong>
+                </Link>
+                <span> - {formatStatus(t.status)}</span>
               </li>
             ))}
           </ul>

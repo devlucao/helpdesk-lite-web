@@ -14,14 +14,22 @@ export async function apiGet(path: string, token: string | null) {
     headers,
   })
 
-  const data = await res.json();
+  let data: any = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
 
   if (!res.ok) {
-    const message = data?.message || "Request failed."
+    const message = data?.message || res.status === 404 ? "Not Found" : "Request failed.";
 
-    throw new Error(message);
+    const err: any = new Error(message);
+    err.status = res.status;
+    err.data = data;
+    
+    throw err;
   }
 
   return data;
-
 }

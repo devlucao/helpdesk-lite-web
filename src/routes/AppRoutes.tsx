@@ -7,6 +7,7 @@ import RoleGuard from "./RoleGuard";
 import AgentQueuePage from "../pages/AgentQueuePage";
 import TicketCreatePage from "../pages/TicketCreatePage";
 import TicketsListPage from "../pages/TicketsListPage";
+import TicketDetailsPage from "../pages/TicketDetailsPage";
 
 export default function AppRoutes() {
   return (
@@ -40,9 +41,13 @@ export default function AppRoutes() {
               <TicketCreatePage />
             </RoleGuard>
           } />
- 
+
           <Route path="tickets" element={
             <TicketsListPage />
+          } />
+
+          <Route path="tickets/:id" element={
+            <TicketDetailsPage />
           } />
 
         </Route>
