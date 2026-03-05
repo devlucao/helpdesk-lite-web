@@ -1,18 +1,16 @@
-export async function apiGet(path: string, token: string | null) {
-  const baseUrl = import.meta.env.VITE_API_URL as string;
+const baseUrl = import.meta.env.VITE_API_URL as string;
 
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json"
-  }
+type ApiError = Error & { status?: number; data?: any };
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`
-  }
+async function apiRequest(method: "GET" | "PATCH", path: string, token: string | null, body?: any) {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const res = await fetch(`${baseUrl}${path}`, {
-    method: "GET",
+    method,
     headers,
-  })
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
 
   let data: any = null;
   try {
@@ -22,9 +20,17 @@ export async function apiGet(path: string, token: string | null) {
   }
 
   if (!res.ok) {
-    const message = data?.message || res.status === 404 ? "Not Found" : "Request failed.";
+    const message = 
+    data?.message || 
+    data?.error ||
+    (res.status === 400 ? "Bad Request (400)" :
+    res.status === 401 ? "Unauthorized (401)" :
+    res.status === 403 ? "Forbidden (403)" :
+    res.status === 404 ? "Not Found (404)" :
+    `Request failed (${res.status})`);
 
-    const err: any = new Error(message);
+    const err: ApiError = new Error(message);
+
     err.status = res.status;
     err.data = data;
     
@@ -32,4 +38,12 @@ export async function apiGet(path: string, token: string | null) {
   }
 
   return data;
+}
+
+export function apiGet(path: string, token: string | null) {
+  return apiRequest("GET", path, token);
+}
+
+export function apiPatch(path: string, token: string | null, body: any) {
+  return apiRequest("PATCH", path, token, body);
 }
